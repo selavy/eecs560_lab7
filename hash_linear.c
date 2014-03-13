@@ -11,23 +11,31 @@ hash_tbl * hash_init() {
   return tbl;
 }
 
-int hash_insert(hash_tbl ** tbl, int val) {
-  int loc = hash(val);
-  int counter = 0;
-  while(((*tbl)->tbl[loc] > 0) && (counter < TBL_SZ)) {
-    loc = (loc + 1) % TBL_SZ;
-    ++counter;
-  }
+int hash_insert(hash_tbl * tbl, int val) {
+  int loc, counter = 0;
+  for(loc = hash(val); (tbl->tbl[loc] > EMPTY) && (counter < TBL_SZ); ++counter, loc = (loc + 1) % TBL_SZ);
 
   if(counter >= TBL_SZ) return -1;
   else {
-    (*tbl)->tbl[loc] = val;
+    tbl->tbl[loc] = val;
     return 0;
   }
 }
 
-int hash_remove(hash_tbl ** tbl, int val) {
-  return 1;
+int hash_remove(hash_tbl * tbl, int val) {
+  int loc, counter = 0;
+  while((tbl->tbl[loc] != val) && (counter < TBL_SZ)) {
+    loc = (loc + 1) % TBL_SZ;
+    ++counter;
+  }
+
+  for(loc = hash(val); (tbl->tbl[loc] != val) && (tbl->tbl[loc] != EMPTY) && (counter < TBL_SZ); ++counter, loc = (loc + 1) % TBL_SZ);
+
+  if(counter >= TBL_SZ) return -1;
+  else {
+    tbl->tbl[loc] = REMOVED;
+  }
+  return 0;
 }
 
 void hash_print(hash_tbl * tbl) {

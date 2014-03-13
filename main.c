@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #ifdef LINEAR
 #include "hash_linear.h"
@@ -34,15 +35,42 @@ int main(int argc, char **argv) {
 
   while(fgets(szCommand, STR_MAX, pData)) {
     int val = atoi(szCommand);
-    printf("%s", szCommand);
     if(val > 0) {
-      hash_insert(&tbl, val);
+      hash_insert(tbl, val);
     }
   }
 
-  hash_print(tbl); printf("\n");
-  
-  fclose(pData);
+  fclose(pData);  
+
+  while(fgets(szCommand, STR_MAX, pCmds)) {
+    char * tok = strtok(szCommand, " ");
+    if(*tok == 'i') {
+      int val;
+      tok = strtok(NULL, " ");
+      val = atoi(tok);
+      if(val > 0) {
+	printf("INSERTING %d\n", val);
+	if(-1 == hash_insert(tbl, val) ) perror("hash_insert");
+      }
+    } else if(*tok == 'd') {
+      int val;
+      tok = strtok(NULL, " ");
+      val = atoi(tok);
+      if(val > 0) {
+	printf("REMOVING %d\n", val);
+	if(-1 == hash_remove(tbl, val) ) perror("hash_remove");
+      }
+    } else if(*tok == 'p') {
+      printf("TABLE: ");
+      hash_print(tbl);
+      printf("\n");
+    }
+  }
+
   fclose(pCmds);
+
+  hash_print(tbl); printf("\n");
+
+
   return 0;
 }
