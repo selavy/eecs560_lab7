@@ -24,11 +24,6 @@ int hash_insert(hash_tbl * tbl, int val) {
 
 int hash_remove(hash_tbl * tbl, int val) {
   int loc, counter = 0;
-  while((tbl->tbl[loc] != val) && (counter < TBL_SZ)) {
-    loc = (loc + 1) % TBL_SZ;
-    ++counter;
-  }
-
   for(loc = hash(val); (tbl->tbl[loc] != val) && (tbl->tbl[loc] != EMPTY) && (counter < TBL_SZ); ++counter, loc = (loc + 1) % TBL_SZ);
 
   if(counter >= TBL_SZ) return -1;

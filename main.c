@@ -8,7 +8,6 @@
 #include "hash_quad.h"
 #endif
 
-
 #define STR_MAX 256
 
 int main(int argc, char **argv) {
@@ -21,6 +20,12 @@ int main(int argc, char **argv) {
     fprintf(stderr, "Usage: %s [DATA FILE] [CMD FILE]\n", argv[0]);
     exit (1);
   }
+
+#ifdef LINEAR
+  printf("Using linear collision resolution...\n\n");
+#else
+  printf("Using quadratic collision resolution...\n\n");
+#endif
 
   pData = fopen(argv[1], "r");
   pCmds = fopen(argv[2], "r");
